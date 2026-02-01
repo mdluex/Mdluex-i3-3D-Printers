@@ -6,7 +6,7 @@ This repository contains the firmware configurations for the **Mdluex i3** 3D pr
 
 *   **Printer Model**: Mdluex i3
 *   **Build Volume**: 230 x 210 x 210 mm
-*   **Display**: RepRapDiscount 128x64 Full Graphic Smart Controller
+*   **Display**: RepRapDiscount 2004 Smart Controller
 *   **Probe**: BLTouch / 3D Touch (Offsets: 30, 10, -4.03)
 *   **Bed Tramming**: Supports "Screws Tilt Adjust" (Corner leveling)
 
