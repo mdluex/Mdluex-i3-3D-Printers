@@ -46,8 +46,8 @@ This plugin ensures your printer is always connected. If Wi-Fi is lost, it creat
 
 ### Features
 *   **Auto-Hotspot**: Activates when offline (open network by default)
-*   **Captive Portal**: Web UI to scan & connect
-*   **LCD Status**: Updates display with connection status
+*   **Captive Portal**: Web UI at `http://10.42.0.1:8888` to scan & connect
+*   **LCD Status**: Shows Wi-Fi status on your printer display (via M117)
 
 ### Hotspot Details
 *   **SSID**: `Klipper-Setup`
@@ -56,24 +56,12 @@ This plugin ensures your printer is always connected. If Wi-Fi is lost, it creat
 ### How to Install
 (Requires SSH access to your Pi)
 
-1.  **Download the Plugin Files**:
-    ```bash
-    mkdir -p ~/wifi_autopilot && cd ~/wifi_autopilot
-    wget https://raw.githubusercontent.com/mdluex/Mdluex-i3-3D-Printers/main/Klipper/klipper_tools/wifi_autopilot/install.sh
-    wget https://raw.githubusercontent.com/mdluex/Mdluex-i3-3D-Printers/main/Klipper/klipper_tools/wifi_autopilot/wifi_autopilot.py
-    wget https://raw.githubusercontent.com/mdluex/Mdluex-i3-3D-Printers/main/Klipper/klipper_tools/wifi_autopilot/wifi_status.cfg
-    ```
-
-2.  **Run the Installer**:
-    ```bash
-    chmod +x install.sh && ./install.sh
-    ```
-
-3.  **Update Klipper Config**:
-    Add to your `printer.cfg`:
-    ```ini
-    [include wifi_status.cfg]
-    ```
+```bash
+mkdir -p ~/wifi_autopilot && cd ~/wifi_autopilot
+wget https://raw.githubusercontent.com/mdluex/Mdluex-i3-3D-Printers/main/Klipper/klipper_tools/wifi_autopilot/install.sh
+wget https://raw.githubusercontent.com/mdluex/Mdluex-i3-3D-Printers/main/Klipper/klipper_tools/wifi_autopilot/wifi_autopilot.py
+chmod +x install.sh && ./install.sh
+```
 
 ### How to Uninstall
 ```bash

@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Klipper Wi-Fi Autopilot - v3.1
+Klipper Wi-Fi Autopilot - v3.2
 Monitors Wi-Fi and provides a captive portal for easy setup.
 
-v3.1 Changes:
-- Fixed open hotspot creation (uses nmcli con add for open networks)
-- Improved LCD message error handling
+v3.2 Changes:
+- Removed wifi_status.cfg dependency - sends M117 directly
+- Simplified installation (no macro needed)
 """
 
 import time
@@ -190,11 +190,11 @@ def get_current_ssid():
 
 
 def klipper_msg(msg):
-    """Send message to Klipper LCD."""
+    """Send message to Klipper LCD via M117 directly."""
     try:
         response = requests.post(
             f"{MOONRAKER_API}/printer/gcode/script",
-            json={"script": f'WIFI_STATUS MSG="{msg}"'},
+            json={"script": f'M117 {msg}'},
             timeout=5
         )
         if response.status_code == 200:
