@@ -52,20 +52,30 @@ This plugin ensures your printer is always connected. If Wi-Fi is lost, it creat
 ### How to Install
 (Requires SSH access to your Pi)
 
-1.  **Clone the repo & navigate to the tool:**
+### How to Install
+(Requires SSH access to your Pi)
+
+1.  **Download the Plugin Files directly**:
     ```bash
-    cd ~
-    git clone https://github.com/mdluex/Mdluex-i3-Firmware--Marlin-Klipper-.git
-    cd "Mdluex-i3-Firmware--Marlin-Klipper-/Klipper/klipper_tools/wifi_autopilot"
+    mkdir -p ~/wifi_autopilot
+    cd ~/wifi_autopilot
+    wget https://raw.githubusercontent.com/mdluex/Mdluex-i3-3D-Printers/main/Klipper/klipper_tools/wifi_autopilot/install.sh
+    wget https://raw.githubusercontent.com/mdluex/Mdluex-i3-3D-Printers/main/Klipper/klipper_tools/wifi_autopilot/wifi_autopilot.py
+    wget https://raw.githubusercontent.com/mdluex/Mdluex-i3-3D-Printers/main/Klipper/klipper_tools/wifi_autopilot/wifi_status.cfg
     ```
 
-2.  **Run Installer:**
+2.  **Run the Installer**:
     ```bash
     chmod +x install.sh
     ./install.sh
     ```
 
-3.  **Update Config:** Add `[include wifi_status.cfg]` to your `printer.cfg`.
+3.  **Update Klipper Config**:
+    Add the status macro to your `printer.cfg`:
+    ```ini
+    [include wifi_status.cfg]
+    ```
+    *(Or copy the file `wifi_status.cfg` to your config folder first)*
 
 ---
 
