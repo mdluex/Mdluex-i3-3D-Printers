@@ -29,4 +29,17 @@ sudo systemctl daemon-reload
 sudo systemctl enable wifi-autopilot.service
 sudo systemctl start wifi-autopilot.service
 
+# 5. Copy Klipper Macro (Autodetect user path)
+CURRENT_USER=${SUDO_USER:-$USER}
+CONFIG_DIR="/home/$CURRENT_USER/printer_data/config"
+
+if [ -d "$CONFIG_DIR" ]; then
+    echo "Detected config directory: $CONFIG_DIR"
+    cp wifi_status.cfg "$CONFIG_DIR/"
+    chown $CURRENT_USER:$CURRENT_USER "$CONFIG_DIR/wifi_status.cfg"
+    echo "✅ Copied wifi_status.cfg to your config folder."
+else
+    echo "⚠️  Could not auto-find 'printer_data/config'. Please move 'wifi_status.cfg' to your Klipper config folder manually."
+fi
+
 echo "Installation Complete! Access the hotspot 'Klipper-Setup' if Wi-Fi is lost."
