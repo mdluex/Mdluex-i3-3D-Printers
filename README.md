@@ -45,20 +45,20 @@ Located in: `Klipper/klipper_tools/wifi_autopilot/`
 This plugin ensures your printer is always connected. If Wi-Fi is lost, it creates a hotspot (`Klipper-Setup`) to allow you to reconnect easily.
 
 ### Features
-*   **Auto-Hotspot**: Activates when offline.
-*   **Captive Portal**: Web UI to scan & connect.
-*   **LCD Status**: Updates display with connection status.
+*   **Auto-Hotspot**: Activates when offline (open network by default)
+*   **Captive Portal**: Web UI to scan & connect
+*   **LCD Status**: Updates display with connection status
+
+### Hotspot Details
+*   **SSID**: `Klipper-Setup`
+*   **Password**: None (open network) - can be set in script config
 
 ### How to Install
 (Requires SSH access to your Pi)
 
-### How to Install
-(Requires SSH access to your Pi)
-
-1.  **Download the Plugin Files directly**:
+1.  **Download the Plugin Files**:
     ```bash
-    mkdir -p ~/wifi_autopilot
-    cd ~/wifi_autopilot
+    mkdir -p ~/wifi_autopilot && cd ~/wifi_autopilot
     wget https://raw.githubusercontent.com/mdluex/Mdluex-i3-3D-Printers/main/Klipper/klipper_tools/wifi_autopilot/install.sh
     wget https://raw.githubusercontent.com/mdluex/Mdluex-i3-3D-Printers/main/Klipper/klipper_tools/wifi_autopilot/wifi_autopilot.py
     wget https://raw.githubusercontent.com/mdluex/Mdluex-i3-3D-Printers/main/Klipper/klipper_tools/wifi_autopilot/wifi_status.cfg
@@ -66,16 +66,21 @@ This plugin ensures your printer is always connected. If Wi-Fi is lost, it creat
 
 2.  **Run the Installer**:
     ```bash
-    chmod +x install.sh
-    ./install.sh
+    chmod +x install.sh && ./install.sh
     ```
 
 3.  **Update Klipper Config**:
-    Add the status macro to your `printer.cfg`:
+    Add to your `printer.cfg`:
     ```ini
     [include wifi_status.cfg]
     ```
-    *(Or copy the file `wifi_status.cfg` to your config folder first)*
+
+### How to Uninstall
+```bash
+cd ~/wifi_autopilot
+wget https://raw.githubusercontent.com/mdluex/Mdluex-i3-3D-Printers/main/Klipper/klipper_tools/wifi_autopilot/uninstall.sh
+chmod +x uninstall.sh && ./uninstall.sh
+```
 
 ---
 
