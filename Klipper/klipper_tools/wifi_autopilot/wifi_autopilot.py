@@ -1,13 +1,11 @@
 #!/usr/bin/env python3
 """
-Klipper Wi-Fi Autopilot - v3.0
+Klipper Wi-Fi Autopilot - v3.1
 Monitors Wi-Fi and provides a captive portal for easy setup.
 
-v3.0 Changes:
-- Runs on port 8888 (avoids conflict with Mainsail on port 80)
-- Uses iptables to redirect port 80 when in hotspot mode
-- Improved hotspot lifecycle management
-- Better connectivity detection
+v3.1 Changes:
+- Fixed open hotspot creation (uses nmcli con add for open networks)
+- Improved LCD message error handling
 """
 
 import time
@@ -199,9 +197,14 @@ def klipper_msg(msg):
             json={"script": f'WIFI_STATUS MSG="{msg}"'},
             timeout=5
         )
-        log.info(f"LCD: {msg}")
+        if response.status_code == 200:
+            log.info(f"LCD: {msg}")
+        else:
+            log.warning(f"LCD failed (status {response.status_code}): {response.text}")
+    except requests.exceptions.ConnectionError:
+        log.debug("LCD: Moonraker not reachable (normal during boot)")
     except Exception as e:
-        log.debug(f"LCD message failed (Klipper may be busy): {e}")
+        log.warning(f"LCD message failed: {e}")
 
 
 def setup_iptables_redirect():
@@ -229,17 +232,26 @@ def enable_hotspot():
     run_cmd(f"nmcli con delete '{HOTSPOT_SSID}' 2>/dev/null")
     time.sleep(1)
     
-    # Create hotspot (with or without password)
-    if HOTSPOT_PASSWORD:
-        output, code = run_cmd(f"nmcli dev wifi hotspot ifname {HOTSPOT_INTERFACE} ssid '{HOTSPOT_SSID}' password '{HOTSPOT_PASSWORD}'")
+    # Create hotspot
+    if HOTSPOT_PASSWORD and len(HOTSPOT_PASSWORD) >= 8:
+        # Protected hotspot with password
+        output, code = run_cmd(
+            f"nmcli dev wifi hotspot ifname {HOTSPOT_INTERFACE} ssid '{HOTSPOT_SSID}' password '{HOTSPOT_PASSWORD}'"
+        )
     else:
-        output, code = run_cmd(f"nmcli dev wifi hotspot ifname {HOTSPOT_INTERFACE} ssid '{HOTSPOT_SSID}'")
+        # Open network - must create connection manually
+        # First, create an AP-mode connection without security
+        run_cmd(f"nmcli con add type wifi ifname {HOTSPOT_INTERFACE} con-name '{HOTSPOT_SSID}' ssid '{HOTSPOT_SSID}' mode ap")
+        run_cmd(f"nmcli con modify '{HOTSPOT_SSID}' wifi-sec.key-mgmt none")
+        run_cmd(f"nmcli con modify '{HOTSPOT_SSID}' ipv4.method shared")
+        run_cmd(f"nmcli con modify '{HOTSPOT_SSID}' ipv4.addresses 10.42.0.1/24")
+        output, code = run_cmd(f"nmcli con up '{HOTSPOT_SSID}'")
     
     if code == 0:
         hotspot_active = True
         setup_iptables_redirect()
-        klipper_msg(f"Wi-Fi Lost! Hotspot: {HOTSPOT_SSID}")
-        log.info(f"Hotspot '{HOTSPOT_SSID}' is UP")
+        klipper_msg(f"WiFi Lost! Hotspot: {HOTSPOT_SSID}")
+        log.info(f"Hotspot '{HOTSPOT_SSID}' is UP (open network)")
         return True
     else:
         log.error(f"Failed to create hotspot: {output}")
